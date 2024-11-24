@@ -51,6 +51,20 @@ class GradientBooster():
         train_scores = []
         val_scores = []
         ### YOUR CODE HERE 
+        for _ in range(self.n_estimators):
+            tmp = self.weak_learner()
+            tmp.fit(X, y)
+
+            pred = tmp.predict(X)
+            alpha = lr
+
+            self.alphas.append(alpha)
+            self.models.append(tmp)
+
+            score = self.score(X, y)
+            val_score = self.score(X_val, y_val)
+            train_scores.append(score)
+            val_scores.append(val_score)
         ### END CODE
 
         # remember to ensure that self.models and self.alphas are filled
@@ -74,6 +88,7 @@ class GradientBooster():
         if len(self.models) == 0:
             return np.zeros(X.shape[0])
         ### YOUR CODE HERE 3-8 lines
+        pred = np.sum(alpha * model.predict(X) for model, alpha in zip(self.models, self.alphas))
         ### END CODE
         return pred
         
@@ -88,6 +103,7 @@ class GradientBooster():
         """
         score = 0
         ### YOUR CODE HERE 1-3 lines
+        score = np.mean((self.predict(X) - y)**2)
         ### END CODE
         return score
 
@@ -104,7 +120,7 @@ def test_housing(max_depth, random_state=42):
         tree = DecisionTreeRegressor(max_depth=d)
         tree.fit(X_train, y_train)
         print('Normal Regression Tree max depth: {0}'.format(d))
-        print('Normal Regression Tree - Trainining data Least Squares Loss', ((tree.predict(X_train) - y_train)**2).mean())
+        print('Normal Regression Tree - Training data Least Squares Loss', ((tree.predict(X_train) - y_train)**2).mean())
         print('Normal Regression Tree Normal - Test data Least Squares Loss', ((tree.predict(X_test) - y_test)**2).mean())
     print('Lets see if we can do better\n')
     
