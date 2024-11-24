@@ -94,7 +94,7 @@ class GradientBooster():
         
 
     def score(self, X, y):
-        """ Return accuracy of model on data X with labels y ((1/n) (sum_i (f(x_i) == y_i])^2)
+        """ Return accuracy of model on data X with labels y ((1/n) (sum_i (f(x_i) - y_i])^2)
         
         Args:
           X (numpy array shape n, d)
